@@ -13,16 +13,29 @@ public class AnimeService {
     @Autowired
     private AnimeRepository animeRepository;
 
-    public Anime salvar(Anime anime){
-        return animeRepository.save(anime);
+    public void setAnimeRepository(AnimeRepository animeRepository) {
+        this.animeRepository = animeRepository;
     }
-    public List<Anime> listaAnime(){
-        return animeRepository.findAll();
+
+    public List<Anime> retrieveAnimes() {
+        List<Anime> animes = animeRepository.findAll();
+        return animes;
     }
-    public Optional<Anime> buscarPorId(Long id){
-        return animeRepository.findById(id);
+
+    public Anime getAnime(Long animeId) {
+        Optional<Anime> optAni = animeRepository.findById(animeId);
+        return optAni.get();
     }
-    public void removerPorId(Long id){
-        animeRepository.deleteById(id);
+
+    public void saveAnime(Anime anime){
+        animeRepository.save(anime);
+    }
+
+    public void deleteAnime(Long animeId){
+        animeRepository.deleteById(animeId);
+    }
+
+    public void updateAnime(Anime anime) {
+        animeRepository.save(anime);
     }
 }

@@ -2,11 +2,8 @@ package br.com.anime.controller;
 
 import br.com.anime.entity.Anime;
 import br.com.anime.service.AnimeService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,46 +12,40 @@ import java.util.List;
 public class AnimeController {
    @Autowired
     private AnimeService animeService;
-   @Autowired
-   private ModelMapper modelMapper;
 
-   @PostMapping
-   @ResponseStatus(HttpStatus.CREATED)
-   public Anime salvar(Anime anime){
-       return animeService.salvar(anime);
-   }
-   @GetMapping
-   @ResponseStatus(HttpStatus.OK
-   )
-   public List<Anime> listaAnime(){
-       return animeService.listaAnime();
-   }
+    @GetMapping("/anime")
+    public List<Anime> getAnimes() {
+        List<Anime> animes= animeService.retrieveAnimes();
+        return animes;
+    }
 
-   @GetMapping("/{id}")
-   @ResponseStatus(HttpStatus.OK)
-   public Anime buscarAnimePorId(@PathVariable("id") Long id){
-       return animeService.buscarPorId(id)
-               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime não encontrado."));
-   }
+    @GetMapping("/anime/{id}")
+    public Anime getAnime(@PathVariable(name="animeId")Long animeId) {
 
-   @DeleteMapping("/{id}")
-   @ResponseStatus(HttpStatus.NO_CONTENT)
-   public void removerAnime(@PathVariable("id")Long id){
-       animeService.buscarPorId(id)
-               .map(anime -> {
-                   animeService.removerPorId(anime.getId());
-                   return Void.TYPE;
-               }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime não encontrado."));
-   }
-   @PutMapping("/{id}")
-   @ResponseStatus(HttpStatus.NO_CONTENT)
-   public void atualizarAnime(@PathVariable("id") Long id , @RequestBody Anime anime){
-       animeService.buscarPorId(id)
-               .map(animeBase -> {
-                   modelMapper.map(anime,animeBase);
-                   return Void.TYPE;
+        return animeService.getAnime(animeId);
+    }
 
-               }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Anime não encontrado."));
-   }
+
+    @PostMapping("/anime")
+    public void saveAnime(Anime anime){
+        animeService.saveAnime(anime);
+        System.out.println("Anime Saved Successfully");
+    }
+
+    @DeleteMapping("/anime/{id}")
+    public void deleteAnime(@PathVariable(name="animeId")Long animeId){
+        animeService.deleteAnime(animeId);
+        System.out.println("Anime Deleted Successfully");
+    }
+
+    @PutMapping("/anime/{id}")
+    public void updateAnime(@RequestBody Anime anime,
+                               @PathVariable(name="animeId")Long animeId){
+        Anime ani = animeService.getAnime(animeId);
+        if(ani != null){
+           animeService.updateAnime(anime);
+        }
+
+    }
 
 }
