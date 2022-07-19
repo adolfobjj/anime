@@ -4,6 +4,8 @@ package br.com.anime.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
+@NoArgsConstructor
 public class Anime implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
